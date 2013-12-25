@@ -11,8 +11,14 @@ var drawikr7 = function(x, y, size){
 	}, false);
 };
 
+var point = function(x, y, size){
+	ctx.beginPath();
+	ctx.arc(x, y, size, 0, Math.PI * 2, false);
+	ctx.fill();
+};
+
 var f = function(x){
-	y = Math.sin(x * Math.PI / 180) * 250;
+	y = Math.sin(x * Math.PI / 180);
 	return y;
 };
 
@@ -23,28 +29,38 @@ var applyFunc = function(){
 	var w = cvs.width;
 	var h = cvs.height;
 
+	var scale = 10;
+	
 	ctx.clearRect(0, 0, w, h);
 
+	ctx.strokeStyle = '#333';
+
 	ctx.beginPath();
-	ctx.moveTo(cvs.width / 2, 0);
-	ctx.lineTo(cvs.width / 2, cvs.height);
-	ctx.moveTo(0, cvs.height / 2);
-	ctx.lineTo(cvs.width, cvs.height / 2);
-	ctx.strokeStyle = '#AAA';
+	ctx.moveTo(w / 2, 0);
+	ctx.lineTo(w / 2, h);
+	ctx.moveTo(0, h / 2);
+	ctx.lineTo(w, h / 2);
 	ctx.stroke();
 
-	ctx.font = '12px "Lucida Grande", Helvetica, Arial, sans-serif';
-	ctx.fillText('0', 252, 248);
-	ctx.fillText('X', 485, 248);
-	ctx.fillText('Y', 252, 15);
+	ctx.strokeStyle = '#DDD';
 
-	var i = -1 * w / 2;
+	for(var i = 0; i < w; i += w / scale / 2){
+		ctx.beginPath();
+		ctx.moveTo(i, 0);
+		ctx.lineTo(i, h);
+		ctx.moveTo(0, i);
+		ctx.lineTo(w, i);
+		ctx.stroke();
+	}
+
+	var i = -scale;
 	var timer = setInterval(function(){
-		if(i < w / 2){
+		if(i < scale){
 			var x = i;
 			var y = -f(x);
-			drawikr7(x + w / 2, y + h / 2, 100);
-			i += 5;
+			drawikr7(( x * (w / 2) / scale + (w / 2)), (y * (h / 2) / scale + (h / 2)), 80);
+			//point(( x * (w / 2) / scale + (w / 2)), (y * (h / 2) / scale + (h / 2)), 2);
+			i += 1 / 1;
 		}else{
 			clearInterval(timer);
 			//applyFunc();
