@@ -62,7 +62,7 @@ var applyFunc = function(){
 			var y = -f(x);
 			drawikr7(( x * (w / 2) / scale + (w / 2)), (y * (h / 2) / scale + (h / 2)), 100);
 			//point(( x * (w / 2) / scale + (w / 2)), (y * (h / 2) / scale + (h / 2)), 1);
-			i += 1 / 50;
+			i += 1 / 10;
 		}else{
 			clearInterval(timer);
 			console.log('End.');
