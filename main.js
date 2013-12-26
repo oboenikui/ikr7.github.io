@@ -5,9 +5,7 @@ var ctx = cvs.getContext('2d');
 
 var drawikr7 = function(x, y, size){
 	var ikr7 = new Image();
-	//ikr7.src = './ikr7.png';
-	//ikr7.src = './mahiru.png';
-	ikr7.src = './dame.png';
+	ikr7.src = './ikr7.png';
 	ikr7.addEventListener('load', function(){
 		ctx.drawImage(ikr7, x - size / 2, y - size / 2, size, size);
 	}, false);
@@ -62,12 +60,11 @@ var applyFunc = function(){
 		if(i < scale){
 			var x = i;
 			var y = -f(x);
-			//drawikr7(( x * (w / 2) / scale + (w / 2)), (y * (h / 2) / scale + (h / 2)), 100);
-			point(( x * (w / 2) / scale + (w / 2)), (y * (h / 2) / scale + (h / 2)), 1);
+			drawikr7(( x * (w / 2) / scale + (w / 2)), (y * (h / 2) / scale + (h / 2)), 100);
+			//point(( x * (w / 2) / scale + (w / 2)), (y * (h / 2) / scale + (h / 2)), 1);
 			i += 1 / 50;
 		}else{
 			clearInterval(timer);
-			//applyFunc();
 			console.log('End.');
 		}
 	}, 4);
