@@ -19,7 +19,7 @@ var point = function(x, y, size){
 };
 
 var f = function(x){
-	y = Math.sin(x * Math.PI / 180);
+	y = Math.sin(x);
 	return y;
 };
 
