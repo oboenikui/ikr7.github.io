@@ -123,4 +123,8 @@ window.addEventListener('keydown', function(e){
 	}
 }, true);
 
+document.querySelector('#savebutton').addEventListener('click', function(){
+	open(cvs.toDataURL('image/png'), Math.random().toString());
+}, false)
+
 applyFunc();
