@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='UTF-8'>
+		<link rel='stylesheet' href='./main.css'>
+	</head>
+	<body>
+		<div id='all'>
+			<h1>ikr7.net</h1>
+			<canvas width='500' height='500'></canvas>
+			<form>
+				<label for='func'>f(x) = </label>
+				<input type='text' id='func' value='sin(x)'><br>
+				<label for='scale'>表示幅: </label>
+				<input type='number' id='scale' value='10' min='1'><br>
+				<label for='density'>密度: </label>
+				<input type='number' id='density' value='10' min='0'><br>
+				<label for='lineWidth'>線幅: </label>
+				<input type='number' id='lineWidth' value='100'><br>
+				<label for='drawInPoint'>点で描画する: </label>
+				<input type='checkbox' id='drawInPoint'><br>
+
+				<input type='submit' value='適用'>
+			</form>
+		</div>
+	</body>
+	<script src='./main.js'></script>
+</html>

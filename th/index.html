@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='UTF-8'>
+<style>
+
+#all{
+	width: 702px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+canvas{
+	width: 700px;
+	height: 350px;
+	border: 1px solid #000;
+}
+
+</style>
+<script>
+
+	window.addEventListener('load', function(){
+		var cvs = document.querySelector('canvas');
+		var ctx = cvs.getContext('2d');
+
+		var dl = document.querySelector('#dl');
+
+		var img = new Image();
+		img.src = './foot.png';
+
+		img.addEventListener('load', function(){
+			setInterval(function(){
+				ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+				ctx.fillRect(0, 0, cvs.width, cvs.height);
+				
+				for(var i = 0; i < 10; i ++){
+					ctx.drawImage(img, Math.random() * cvs.width, Math.random() * cvs.height, 200, 200);
+				}
+
+				dl.href = cvs.toDataURL('image/png');
+
+			}, 1000);
+		}, false);
+	}, false);
+
+</script>
+</head>
+<body>
+	<div id='all'>
+		<h2>Twitter 用ヘッダー画像生成</h2>
+		<p>ここだというタイミングでDLボタンをおしてね</p>
+		<canvas width='1252' height='626'></canvas>
+		<p><a href='' id='dl' download='header.png'>↓DL</a></p>
+	</div>
+</body>
+</html>
