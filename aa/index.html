@@ -4,9 +4,7 @@
 		<meta charset='UTF-8'>
 		<style>
 
-canvas{
-	display: none;
-}
+canvas{display: none;}
 
 #output{
 	font-size: 1em; 
@@ -35,10 +33,16 @@ canvas{
 		<div id='output'></div>
 		<script>
 
-document.querySelectorAll('input').item(1).addEventListener('click', app, false);
+var btn = document.querySelectorAll('input').item(1);
+btn.addEventListener('click', app, false);
+
 app();
 
 function app(){
+
+	btn.value = 'ちょっとまってね…';
+	btn.setAttribute('disabled');
+
 	var cvs = document.querySelector('canvas');
 	cvs.width = 512;
 	cvs.height = 512;
@@ -47,44 +51,47 @@ function app(){
 
 	var ctx = cvs.getContext('2d');
 	var chars = document.querySelector('input').value.split('');
-	var o = document.querySelector('#output');
-	o.innerHTML = '';
+	var result = '';
 
 	var image = new Image();
 	image.src = document.querySelector('select').value;
 	image.addEventListener('load', function(){
 		
+		console.time('time');
+
 		ctx.fillStyle = '#FFFFFF';
 		ctx.fillRect(0, 0, cvs.width, cvs.height);
 		
 		ctx.drawImage(image, 0, 0, cvs.width, cvs.height);	
 		ctx.fillStyle = '#F00';
 
-		var c = 0;
-
+		var data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height).data;
+		
 		for(var i = 0; i < ctx.canvas.height; i += dotSize){
 			for(var j = 0; j < ctx.canvas.width; j += dotSize){
 
-				//デバッグ用
-				//ctx.fillText(c, j, i+10);
-				//ctx.strokeRect(j, i, dotSize, dotSize);
-
-				var chunk = ctx.getImageData(j, i, dotSize, dotSize);
-
 				var r = 0, g = 0, b = 0;
 
-				for(var k = 0; k < chunk.data.length; k += 4){
-					r += chunk.data[k + 0];
-					g += chunk.data[k + 1];
-					b += chunk.data[k + 2];
+				for(var dy = 0; dy < dotSize; dy++){
+					for(var dx = 0; dx < dotSize; dx++){
+						r += data[((i + dy) * ctx.canvas.width + (j + dx)) * 4 + 0];
+						g += data[((i + dy) * ctx.canvas.width + (j + dx)) * 4 + 1];
+						b += data[((i + dy) * ctx.canvas.width + (j + dx)) * 4 + 2];
+					}
 				}
 
 				var darkness = 1 - (r + g + b) / (255 * 3 * dotSize * dotSize);
-
-				o.innerHTML += chars[darkness * chars.length | 0];
+				result += chars[darkness * chars.length | 0];
 			}
-			o.innerHTML += '<br>'
+			result += '<br>'
 		};
+
+		document.querySelector('#output').innerHTML = result;
+
+		btn.value = '適用する';
+		btn.removeAttribute('disabled');
+
+		console.timeEnd('time');
 
 	}, false);
 }
