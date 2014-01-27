@@ -5,35 +5,36 @@
 		<style>
 
 canvas{
-	transform: scaleX(-1) rotate(90deg);
-		-webkit-transform: scaleX(-1) rotate(90deg);
-		-moz-transform: scaleX(-1) rotate(90deg);
-	float: left;
+	display: none;
 }
 
-div{
+#output{
+	font-size: 1em; 
 	line-height: 1em;
 	letter-spacing: 0;
-	float:left;
 }
 
-p{
-	clear: both;
-}
 
 		</style>
 	</head>
 	<body>
-		<h1>AAっぽいの</h1>
-		<p>同一生成元ポリシーがアレなので好きな画像で遊びたいときはDLしてね(おなじディレクトリにimage.pngを入れろ(正方形の方がいいです))</p>
-		<input value='　▁▂▄▅▇█'>
-		<input type='button' value='うん'><br>
+		<select id='imagepath'>
+			<optgroup label='実写'>
+				<option value='./abe.png'>阿部寛</option>
+				<option value='./majima.jpg'>満島ひかり</option>
+				<option value='./ramen.jpg'>ラーメン二郎</option>
+			</optgroup>
+			<optgroup label='アニメ・イラスト'>
+				<option value='./yunocchi.png'>ゆのっち</option>
+				<option value='./ikr7.png'>ikr7</option>
+			</optgroup>
+		</select>
+		<input type='text' value='　▁▂▄▅▇█'>
+		<input type='button' value='適用する'><br>
 		<canvas></canvas>
-		<div></div>
-		<p>阿部寛さんありがとうございました</p>
+		<div id='output'></div>
 		<script>
 
-document.querySelectorAll('input').item(0).addEventListener('change', app, false);
 document.querySelectorAll('input').item(1).addEventListener('click', app, false);
 app();
 
@@ -42,50 +43,49 @@ function app(){
 	cvs.width = 512;
 	cvs.height = 512;
 
-	var dotSize = 16;
+	var dotSize = 8;
 
 	var ctx = cvs.getContext('2d');
-
-	//var chars = '　、＿＾｜〜／＝イい＃あ禅鬱█'.split('').reverse();
-	var chars = document.querySelector('input').value.split('').reverse();
-	//var chars = '　▏▍▌▋▊▉█'.split('').reverse();
-	//var chars = '　・ー〜＝＃Ｇ'.split('').reverse();
-
-	var o = document.querySelector('div');
+	var chars = document.querySelector('input').value.split('');
+	var o = document.querySelector('#output');
 	o.innerHTML = '';
 
 	var image = new Image();
-	image.src = './image.png'
+	image.src = document.querySelector('select').value;
 	image.addEventListener('load', function(){
 		
 		ctx.fillStyle = '#FFFFFF';
 		ctx.fillRect(0, 0, cvs.width, cvs.height);
-		ctx.translate(cvs.width / 2, cvs.height / 2);
-		ctx.rotate(270 * Math.PI / 180);
-		ctx.scale(-1, 1);
-		ctx.translate(-cvs.width / 2, -cvs.height / 2);
 		
 		ctx.drawImage(image, 0, 0, cvs.width, cvs.height);	
-		
-		for(var i = 0; i < cvs.width; i += dotSize){
-			for(var j = 0; j < cvs.height; j += dotSize){
-				
-				var originalChunk = ctx.getImageData(i, j, dotSize, dotSize);
+		ctx.fillStyle = '#F00';
 
-				var r = 0, g = 0, b = 0, a = 0;
+		var c = 0;
 
-				for(var k = 0; k < originalChunk.data.length / 4; k++){
-					r += originalChunk.data[k * 4 + 0];
-					g += originalChunk.data[k * 4 + 1];
-					b += originalChunk.data[k * 4 + 2];
-					a += originalChunk.data[k * 4 + 3];
+		for(var i = 0; i < ctx.canvas.height; i += dotSize){
+			for(var j = 0; j < ctx.canvas.width; j += dotSize){
+
+				//デバッグ用
+				//ctx.fillText(c, j, i+10);
+				//ctx.strokeRect(j, i, dotSize, dotSize);
+
+				var chunk = ctx.getImageData(j, i, dotSize, dotSize);
+
+				var r = 0, g = 0, b = 0;
+
+				for(var k = 0; k < chunk.data.length; k += 4){
+					r += chunk.data[k + 0];
+					g += chunk.data[k + 1];
+					b += chunk.data[k + 2];
 				}
 
-				o.innerHTML += chars[(r + g + b + a) / 262140 * chars.length | 0];
+				var darkness = 1 - (r + g + b) / (255 * 3 * dotSize * dotSize);
 
+				o.innerHTML += chars[darkness * chars.length | 0];
 			}
-			o.innerHTML += '<br>';
-		}
+			o.innerHTML += '<br>'
+		};
+
 	}, false);
 }
 
