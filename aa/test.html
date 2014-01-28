@@ -96,7 +96,7 @@ function app(){
 		ctx.fillStyle = '#F00';
 
 		var data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height).data;
-		
+
 		for(var i = 0; i < ctx.canvas.height; i += dotSize){
 			for(var j = 0; j < ctx.canvas.width; j += dotSize){
 
@@ -111,7 +111,10 @@ function app(){
 				}
 
 				var darkness = 1 - (r + g + b) / (255 * 3 * dotSize * dotSize);
-				result += chars[darkness * chars.length | 0];
+				result += '<span style=\'color:rgb(' + 
+					(r / (dotSize * dotSize) | 0) + ', ' + 
+					(g / (dotSize * dotSize) | 0) + ', ' + 
+					(b / (dotSize * dotSize) | 0) + ');\'>█</span>';
 			}
 			result += '<br>'
 		};
