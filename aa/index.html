@@ -10,8 +10,6 @@ canvas{display: none;}
 	font-size: 1em; 
 	line-height: 1em;
 	letter-spacing: 0;
-	color: lime;
-	background: black;
 }
 
 
@@ -80,7 +78,7 @@ function app(){
 	var ctx = cvs.getContext('2d');
 	var chars = (document.querySelector('input').value + '　').split('').sort(function(a, b){
 		return thickness(a) - thickness(b);
-	}).reverse();
+	});
 	console.log(chars);
 	var result = '';
 
