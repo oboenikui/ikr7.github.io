@@ -30,7 +30,7 @@ canvas{display: none;}
 		<input type='text' value='▁▂▄▅▇█'>
 		<input type='button' value='適用する'>
 		<input type='button' value='HTMLとして出力'><br>
-		<div id='output'></div>
+		<pre id='output'></pre>
 		<script>
 
 var thickness = function(ch){	
@@ -113,7 +113,7 @@ function app(){
 				var darkness = 1 - (r + g + b) / (255 * 3 * dotSize * dotSize);
 				result += chars[darkness * chars.length | 0];
 			}
-			result += '<br>'
+			result += '\n'
 		};
 
 		document.querySelector('#output').innerHTML = result;
@@ -127,7 +127,7 @@ function app(){
 }
 
 document.querySelectorAll('input').item(2).addEventListener('click', function(){
-	var data = '<!DOCTYPE html><head><meta charset=\'utf-8\'><style>body{font-size:1em;line-height:1em;letter-spacing:0;}</style></head><body>' + document.querySelector('#output').innerHTML + '</body></html>';
+	var data = '<!DOCTYPE html><head><meta charset=\'utf-8\'><style>pre{font-size:1em;line-height:1em;letter-spacing:0;}</style></head><body><pre>' + document.querySelector('#output').innerHTML + '</pre></body></html>';
 	open('data:text/html;charset=utf-8,' + encodeURI(data));
 }, false);
 
