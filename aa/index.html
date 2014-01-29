@@ -59,7 +59,6 @@ var thickness = function(ch){
 
 var loadImage = function(callback){
 	var files = document.querySelector('#file').files;
-	console.log(files);
 	if(!files.length){
 		callback('./ikr7.png');
 		return;
@@ -89,10 +88,31 @@ function app(){
 	var dotSize = parseInt(document.querySelector('#dot-size').value);
 
 	var ctx = cvs.getContext('2d');
+
 	var chars = (document.querySelector('#chars').value + '　').split('').sort(function(a, b){
 		return thickness(a) - thickness(b);
 	});
+
+	var color = document.querySelector('#color').value;
+	var bgcolor = document.querySelector('#bgcolor').value;
+
+	var color_b = 
+		parseInt('0x' + color.substr(1, 2)) + 
+		parseInt('0x' + color.substr(3, 2)) + 
+		parseInt('0x' + color.substr(5, 2));
+
+
+	var bgcolor_b = 
+		parseInt('0x' + bgcolor.substr(1, 2)) + 
+		parseInt('0x' + bgcolor.substr(3, 2)) + 
+		parseInt('0x' + bgcolor.substr(5, 2));
+
+	if(color_b > bgcolor_b){
+		chars = chars.reverse();
+	}
+
 	console.log(chars);
+	
 	var result = '';
 
 	var image = new Image();
@@ -131,8 +151,8 @@ function app(){
 			};
 
 			var output = document.querySelector('#output');
-			output.style.color = document.querySelector('#color').value;
-			output.style.backgroundColor = document.querySelector('#bgcolor').value;
+			output.style.color = color;
+			output.style.backgroundColor = bgcolor;
 			output.innerHTML = result;
 
 			btn.value = '適用する';
