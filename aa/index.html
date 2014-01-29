@@ -16,21 +16,19 @@ canvas{display: none;}
 		</style>
 	</head>
 	<body>
-		<select id='imagepath'>
-			<optgroup label='実写'>
-				<option value='./abe.png'>阿部寛</option>
-				<option value='./majima.jpg'>満島ひかり</option>
-				<option value='./ramen.jpg'>ラーメン二郎</option>
-			</optgroup>
-			<optgroup label='アニメ・イラスト'>
-				<option value='./yunocchi.png'>ゆのっち</option>
-				<option value='./ikr7.png'>ikr7</option>
-			</optgroup>
+		<input type='file' id='file'>
+		<input type='text' value='▁▂▄▅▇█' id='chars'>
+		<select id='dot-size'>
+			<option value='32'>32</option>
+			<option value='16'>16</option>
+			<option value='8' selected>8</option>
+			<option value='4'>4</option>
 		</select>
-		<input type='text' value='▁▂▄▅▇█'>
-		<input type='button' value='適用する'>
-		<input type='button' value='HTMLとして出力'><br>
-		<pre id='output'></pre>
+		<input type='color' value='#000000' id='color'>
+		<input type='color' value='#FFFFFF' id='bgcolor'>
+		<input type='button' value='適用する' id='run'>
+		<input type='button' value='HTMLとして出力' id='output-as-html'><br>
+		<div id='output'></div>
 		<script>
 
 var thickness = function(ch){	
@@ -56,11 +54,25 @@ var thickness = function(ch){
 		var b = imageData.data[i * 4 + 2];
 		score -= (r + g + b);
 	};
-
 	return (score / 76500);
 };
 
-var btn = document.querySelectorAll('input').item(1);
+var loadImage = function(callback){
+	var files = document.querySelector('#file').files;
+	console.log(files);
+	if(!files.length){
+		callback('./ikr7.png');
+		return;
+	}else{
+		var fr = new FileReader();
+		fr.addEventListener('load', function(e){
+			callback(e.target.result);
+		}, false);
+		fr.readAsDataURL(files[0]);
+	}
+};
+
+var btn = document.querySelector('#run');
 btn.addEventListener('click', app, false);
 
 app();
@@ -74,60 +86,65 @@ function app(){
 	cvs.width = 512;
 	cvs.height = 512;
 
-	var dotSize = 8;
+	var dotSize = parseInt(document.querySelector('#dot-size').value);
 
 	var ctx = cvs.getContext('2d');
-	var chars = (document.querySelector('input').value + '　').split('').sort(function(a, b){
+	var chars = (document.querySelector('#chars').value + '　').split('').sort(function(a, b){
 		return thickness(a) - thickness(b);
 	});
 	console.log(chars);
 	var result = '';
 
 	var image = new Image();
-	image.src = document.querySelector('select').value;
-	image.addEventListener('load', function(){
-		
-		console.time('time');
 
-		ctx.fillStyle = '#FFFFFF';
-		ctx.fillRect(0, 0, cvs.width, cvs.height);
-		
-		ctx.drawImage(image, 0, 0, cvs.width, cvs.height);	
-		ctx.fillStyle = '#F00';
+	loadImage(function(imageURL){
+		image.src = imageURL;
+		image.addEventListener('load', function(){
 
-		var data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height).data;
-		
-		for(var i = 0; i < ctx.canvas.height; i += dotSize){
-			for(var j = 0; j < ctx.canvas.width; j += dotSize){
+			console.time('time');
 
-				var r = 0, g = 0, b = 0;
+			ctx.fillStyle = '#FFFFFF';
+			ctx.fillRect(0, 0, cvs.width, cvs.height);
+			
+			ctx.drawImage(image, 0, 0, cvs.width, cvs.height);	
+			ctx.fillStyle = '#F00';
 
-				for(var dy = 0; dy < dotSize; dy++){
-					for(var dx = 0; dx < dotSize; dx++){
-						r += data[((i + dy) * ctx.canvas.width + (j + dx)) * 4 + 0];
-						g += data[((i + dy) * ctx.canvas.width + (j + dx)) * 4 + 1];
-						b += data[((i + dy) * ctx.canvas.width + (j + dx)) * 4 + 2];
+			var data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height).data;
+			
+			for(var i = 0; i < ctx.canvas.height; i += dotSize){
+				for(var j = 0; j < ctx.canvas.width; j += dotSize){
+
+					var r = 0, g = 0, b = 0;
+
+					for(var dy = 0; dy < dotSize; dy++){
+						for(var dx = 0; dx < dotSize; dx++){
+							r += data[((i + dy) * ctx.canvas.width + (j + dx)) * 4 + 0];
+							g += data[((i + dy) * ctx.canvas.width + (j + dx)) * 4 + 1];
+							b += data[((i + dy) * ctx.canvas.width + (j + dx)) * 4 + 2];
+						}
 					}
+
+					var darkness = 1 - (r + g + b) / (255 * 3 * dotSize * dotSize);
+					result += chars[darkness * chars.length - 0.5 | 0];
 				}
+				result += '<br>'
+			};
 
-				var darkness = 1 - (r + g + b) / (255 * 3 * dotSize * dotSize);
-				result += chars[darkness * chars.length | 0];
-			}
-			result += '\n'
-		};
+			var output = document.querySelector('#output');
+			output.style.color = document.querySelector('#color').value;
+			output.style.backgroundColor = document.querySelector('#bgcolor').value;
+			output.innerHTML = result;
 
-		document.querySelector('#output').innerHTML = result;
+			btn.value = '適用する';
+			btn.removeAttribute('disabled');
 
-		btn.value = '適用する';
-		btn.removeAttribute('disabled');
-
-		console.timeEnd('time');
-
-	}, false);
+			console.timeEnd('time');
+		}, false);
+	});
 }
 
-document.querySelectorAll('input').item(2).addEventListener('click', function(){
-	var data = '<!DOCTYPE html><head><meta charset=\'utf-8\'><style>pre{font-size:1em;line-height:1em;letter-spacing:0;}</style></head><body><pre>' + document.querySelector('#output').innerHTML + '</pre></body></html>';
+document.querySelector('#output-as-html').addEventListener('click', function(){
+	var data = '<!DOCTYPE html><head><meta charset=\'utf-8\'><style>body{font-size:1em;line-height:1em;letter-spacing:0;color:' + document.querySelector('#color').value + ';background-color:' + document.querySelector('#bgcolor').value + '}</style></head><body>' + document.querySelector('#output').innerHTML + '</body></html>';
 	open('data:text/html;charset=utf-8,' + encodeURI(data));
 }, false);
 
