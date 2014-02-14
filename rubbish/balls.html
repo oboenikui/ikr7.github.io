@@ -79,7 +79,11 @@ var update = function(){
 			if(j != i){
 				var distance = Math.sqrt(Math.pow(ball.x - otherBall.x, 2) + Math.pow(ball.y - otherBall.y, 2));
 				if(distance < ball.r + otherBall.r){
-					ball.color.h = otherBall.color.h;
+					if(ball.r < otherBall.r){
+						ball.color.h = otherBall.color.h;
+					}else if(ball.r > otherBall.r){
+						otherBall.color.h = ball.color.h;
+					}
 				}
 			}
 		});
