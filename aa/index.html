@@ -7,7 +7,7 @@
 canvas{display: none;}
 
 #output{
-	font-size: 1em; 
+	font-size: 0.5em;
 	line-height: 1em;
 	letter-spacing: 0;
 }
@@ -18,12 +18,16 @@ canvas{display: none;}
 	<body>
 		<input type='file' id='file'>
 		<input type='text' value='▁▂▄▅▇█' id='chars'>
+		<input type='button' value='ランダム(β)' id='random'>
+	<!--
 		<select id='dot-size'>
 			<option value='32'>32</option>
 			<option value='16'>16</option>
 			<option value='8' selected>8</option>
 			<option value='4'>4</option>
 		</select>
+	-->
+		<input type='number' value='8' id='dot-size'>
 		<input type='color' value='#000000' id='color'>
 		<input type='color' value='#FFFFFF' id='bgcolor'>
 		<input type='button' value='適用する' id='run'>
@@ -164,9 +168,17 @@ function app(){
 }
 
 document.querySelector('#output-as-html').addEventListener('click', function(){
-	var data = '<!DOCTYPE html><head><meta charset=\'utf-8\'><style>body{font-size:1em;line-height:1em;letter-spacing:0;color:' + document.querySelector('#color').value + ';background-color:' + document.querySelector('#bgcolor').value + '}</style></head><body>' + document.querySelector('#output').innerHTML + '</body></html>';
+	var data = '<!DOCTYPE html><html><head><meta charset=\'utf-8\'><style>body{font-size:0.5em;line-height:1em;letter-spacing:0;color:' + document.querySelector('#color').value + ';background-color:' + document.querySelector('#bgcolor').value + '}</style></head><body>' + document.querySelector('#output').innerHTML + '</body></html>';
 	open('data:text/html;charset=utf-8,' + encodeURI(data));
 }, false);
+
+document.querySelector('#random').addEventListener('click', function(){
+	var s = '';
+	for(var i = 0; i < 10; i++){
+		s += String.fromCharCode(Math.random() * 8000000 | 0);
+	}
+	document.querySelector('#chars').value = s;
+})
 
 		</script>
 	</body>

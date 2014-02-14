@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8'>
+	</head>
+	<body>
+		<h1>SCP1000 test</h1>
+		<canvas></canvas>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+		<script>
+
+var canvas = document.querySelector('canvas');
+var context = canvas.getContext('2d');
+
+canvas.width = 1400;
+canvas.height = 500;
+
+var c = 0;
+var pTemp = 0;
+var pPres = 0;
+var scale = 10;
+
+context.lineWidth = 0.2;
+
+for(var i = 0; i < canvas.height; i += scale){
+	if(i / scale % 5 == 0){
+		context.fillText((canvas.height - i) / scale + '℃', 0, i + 5);
+	}
+	context.beginPath();
+	context.moveTo(0, canvas.height - i);
+	context.lineTo(canvas.width, canvas.height - i);
+	context.stroke();
+}
+
+context.strokeStyle = '#FF0000';
+context.lineWidth = 1;
+
+var socket = io.connect('http://localhost:8080');
+socket.on('data', function(data){
+	data = data.split(',');
+
+	var value = {
+		'temp': parseFloat(data[0]), 
+		'pres': parseFloat(data[1])
+	};
+
+	context.beginPath();
+
+	// context.moveTo(c, canvas.height - (
+	// 	c == 0 ? value.temp : pTemp
+	// ));
+
+	context.moveTo(c, canvas.height - (
+		c == 0 ? value.pres : pPres
+	));
+
+	//context.lineTo(++c, canvas.height - value.temp);
+	context.lineTo(++c, (canvas.height - value.pres) / 10);
+
+	context.stroke();
+
+	//pTemp = value.temp;
+	console.log(value.pres, pPres);
+	pPres = value.pres / 10;
+	console.log(value);
+});
+
+		</script>
+	</body>
+</html>

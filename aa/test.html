@@ -2,137 +2,19 @@
 <html>
 	<head>
 		<meta charset='UTF-8'>
-		<style>
-
-canvas{display: none;}
-
-#output{
-	font-size: 1em; 
-	line-height: 1em;
-	letter-spacing: 0;
-}
-
-
-		</style>
 	</head>
-	<body>
-		<select id='imagepath'>
-			<optgroup label='実写'>
-				<option value='./abe.png'>阿部寛</option>
-				<option value='./majima.jpg'>満島ひかり</option>
-				<option value='./ramen.jpg'>ラーメン二郎</option>
-			</optgroup>
-			<optgroup label='アニメ・イラスト'>
-				<option value='./yunocchi.png'>ゆのっち</option>
-				<option value='./ikr7.png'>ikr7</option>
-			</optgroup>
-		</select>
-		<input type='text' value='▁▂▄▅▇█'>
-		<input type='button' value='適用する'>
-		<input type='button' value='HTMLとして出力'><br>
-		<pre id='output'></pre>
+	<body style='font-size:5em'>
 		<script>
 
-var thickness = function(ch){	
-	var canvas = document.createElement('canvas');
-	var context = canvas.getContext('2d');
-
-	canvas.width = context.measureText(ch).width;
-	canvas.height = context.measureText('あ').width;
-
-	context.fillStyle = '#FFFFFF';
-	context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-
-	context.fillStyle = '#000000';
-	context.textBaseline = 'top';
-	context.fillText(ch, 0, 0);
-
-	var imageData = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
-	var score = 76500;
-
-	for(var i = 0; i < imageData.data.length / 4; i++){
-		var r = imageData.data[i * 4 + 0];
-		var g = imageData.data[i * 4 + 1];
-		var b = imageData.data[i * 4 + 2];
-		score -= (r + g + b);
-	};
-
-	return (score / 76500);
-};
-
-var btn = document.querySelectorAll('input').item(1);
-btn.addEventListener('click', app, false);
-
-app();
-
-function app(){
-
-	btn.value = 'ちょっとまってね…';
-	btn.setAttribute('disabled', 'disabled');
-
-	var cvs = document.createElement('canvas');
-	cvs.width = 512;
-	cvs.height = 512;
-
-	var dotSize = 4;
-
-	var ctx = cvs.getContext('2d');
-	var chars = (document.querySelector('input').value + '　').split('').sort(function(a, b){
-		return thickness(a) - thickness(b);
-	});
-	console.log(chars);
-	var result = '';
-
-	var image = new Image();
-	image.src = document.querySelector('select').value;
-	image.addEventListener('load', function(){
-		
-		console.time('time');
-
-		ctx.fillStyle = '#FFFFFF';
-		ctx.fillRect(0, 0, cvs.width, cvs.height);
-		
-		ctx.drawImage(image, 0, 0, cvs.width, cvs.height);	
-		ctx.fillStyle = '#F00';
-
-		var data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height).data;
-
-		for(var i = 0; i < ctx.canvas.height; i += dotSize){
-			for(var j = 0; j < ctx.canvas.width; j += dotSize){
-
-				var r = 0, g = 0, b = 0;
-
-				for(var dy = 0; dy < dotSize; dy++){
-					for(var dx = 0; dx < dotSize; dx++){
-						r += data[((i + dy) * ctx.canvas.width + (j + dx)) * 4 + 0];
-						g += data[((i + dy) * ctx.canvas.width + (j + dx)) * 4 + 1];
-						b += data[((i + dy) * ctx.canvas.width + (j + dx)) * 4 + 2];
-					}
+			var random = function(l){
+				var s = '';
+				for(var i = 0; i < l; i++){
+					s += String.fromCharCode(Math.random() * 8000000 | 0);
 				}
+				return s;
+			};
 
-				var darkness = 1 - (r + g + b) / (255 * 3 * dotSize * dotSize);
-				result += '<span style=\'color:rgb(' + 
-					(r / (dotSize * dotSize) | 0) + ', ' + 
-					(g / (dotSize * dotSize) | 0) + ', ' + 
-					(b / (dotSize * dotSize) | 0) + ');\'>█</span>';
-			}
-			result += '\n';
-		};
-
-		document.querySelector('#output').innerHTML = result;
-
-		btn.value = '適用する';
-		btn.removeAttribute('disabled');
-
-		console.timeEnd('time');
-
-	}, false);
-}
-
-document.querySelectorAll('input').item(2).addEventListener('click', function(){
-	var data = '<!DOCTYPE html><head><meta charset=\'utf-8\'><style>body{font-size:1em;line-height:1em;letter-spacing:0;}</style></head><body>\n' + document.querySelector('#output').innerHTML + '\n</body></html>';
-	open('data:text/html;charset=utf-8,' + encodeURI(data));
-}, false);
+			document.body.innerHTML = random(100);
 
 		</script>
 	</body>
