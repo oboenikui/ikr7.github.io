@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='UTF-8'>
+	<title>マインクラフトのアレ</title>
+	<style>
+
+body{
+	background: #ddd;
+}
+
+	</style>
+</head>
+<body>
+	<a href='https://dl.dropboxusercontent.com/u/28984230/MC/utils/background.html'>併せて使おう</a>
+	<div>
+		<input type='number' id='cols' value='9'>
+		<input type='number' id='rows' value='6'>
+		<a id='d' download='slot.png' href='/'>
+			<button>DL</button>
+		</a>
+	</div>
+	<div>
+		<canvas></canvas>
+	<div>
+	<script type='text/javascript'>
+
+var apply = function(){
+	var cvs = document.querySelector('canvas');
+	
+	var cols = document.querySelector('#cols').value.toString();
+	var rows = document.querySelector('#rows').value.toString();
+
+	cvs.width  = cols * 18;
+	cvs.height = rows * 18;
+
+	cvs.style.width = cvs.width * 3;
+	cvs.style.height = cvs.height * 3;
+
+	var ctx = cvs.getContext('2d');
+
+	for(var i = 0; i < cols; i++){
+		for(var j = 0; j < rows; j++){
+
+			ctx.fillStyle = '#8b8b8b';
+			ctx.fillRect(i * 18, j * 18, 18, 18);
+
+			ctx.fillStyle = '#373737';
+			ctx.fillRect(i * 18, j * 18, 18, 1);
+			ctx.fillRect(i * 18, j * 18, 1, 18);
+
+			ctx.fillStyle = '#ffffff';
+			ctx.fillRect(i * 18 + 17, j * 18, 1, 18);
+			ctx.fillRect(i * 18, j * 18 + 17, 18, 1);
+
+			ctx.fillStyle = '#8b8b8b';
+			ctx.fillRect(i * 18 + 17, j * 18, 1, 1);
+			ctx.fillRect(i * 18, j * 18 + 17, 1, 1);
+		}
+	}
+	document.querySelector('#d').href = document.querySelector('#c').toDataURL('image/png');
+};
+
+var initialize = function (){
+	document.querySelector('#cols').addEventListener('change', apply, false);
+	document.querySelector('#rows').addEventListener('change', apply, false);
+	apply();
+};
+
+window.addEventListener('load', initialize, false);
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='UTF-8'>
+<style>
+
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+div{
+	position: absolute;
+}
+
+</style>
+</head>
+<body>
+<div></div>
+<canvas></canvas>
+<script src='./utils.js'></script>
+<script>
+
+var canvas = document.querySelector('canvas');
+var context = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+var rect = function(context, x, y, w, h){
+	context.save();
+	context.lineCap = 'butt';
+	context.lineWidth = w;
+
+	context.beginPath();
+	context.moveTo(x + w / 2, y + h);
+	context.lineTo(x + w / 2, y);
+	context.stroke();
+
+	context.restore();
+};
+
+rect(context, 10, 10, 300, 300);
+
+</script>
+</body>
+</html>

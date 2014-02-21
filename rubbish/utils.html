@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='UTF-8'>
+<style>
+
+canvas{
+	border: 1px solid #000;
+}
+
+</style>
+</head>
+<body>
+<canvas></canvas>
+<script src='./utils.js'></script>
+<script>
+
+var canvas = document.querySelector('canvas');
+var context = canvas.getContext('2d');
+
+canvas.width = 500;
+canvas.height = 500;
+
+ikr7Utils.Canvas.circle(context, 300, 350, 50, 'orange', 'navy', 5);
+ikr7Utils.Canvas.line(context, 40, 50, 80, 10, 'black', 5);
+
+</script>
+</body>
+</html>

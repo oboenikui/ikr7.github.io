@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='UTF-8'>
+<title>バイナリエディタについてるbitmapビュー</title>
+	<style type='text/css'>
+
+	canvas{
+		width: 256px;
+	}
+
+	</style>
+</head>
+<body>
+	<input type='file' id='file'>
+	<input type='button' id='button' value='Read'>
+	<div>
+	    <canvas id='map' width='0' height='0'></canvas>
+	</div>
+	<script type='text/javascript'>
+
+	document.querySelector('#button').addEventListener('click', function(e){
+
+		var btn = e.target;
+		btn.value = 'Plaese wait...';
+
+		var file = document.querySelector('#file').files[0];
+		var fr = new FileReader();
+		
+		fr.addEventListener('load', function(e){
+			var mapElement = document.querySelector('#map');
+
+			var WIDTH = 128;
+			var HEIGHT = Math.ceil(e.target.result.length / WIDTH);
+
+			mapElement.width = WIDTH;
+			mapElement.height = HEIGHT;
+
+			var mapContext = mapElement.getContext('2d');
+			var mapImage = mapContext.createImageData(WIDTH, HEIGHT);
+			
+			for (var i = 0; i < e.target.result.length; i++){
+				var bin = e.target.result[i].charCodeAt();
+				if(bin == '0'){
+					mapImage.data[i * 4 + 0] = 255;
+					mapImage.data[i * 4 + 1] = 255;
+					mapImage.data[i * 4 + 2] = 255;
+					mapImage.data[i * 4 + 3] = 255;
+				}else if(bin < 32){
+					mapImage.data[i * 4 + 0] = 0;
+					mapImage.data[i * 4 + 1] = 255;
+					mapImage.data[i * 4 + 2] = 255;
+					mapImage.data[i * 4 + 3] = 255;
+				}else if(bin < 128){
+					mapImage.data[i * 4 + 0] = 255;
+					mapImage.data[i * 4 + 1] = 0;
+					mapImage.data[i * 4 + 2] = 0;
+					mapImage.data[i * 4 + 3] = 255;
+				}else{
+					mapImage.data[i * 4 + 0] = 0;
+					mapImage.data[i * 4 + 1] = 0;
+					mapImage.data[i * 4 + 2] = 0;
+					mapImage.data[i * 4 + 3] = 255;
+				}
+				mapContext.putImageData(mapImage, 0, 0);
+				btn.value = 'Read';
+			}
+		}, false);
+		fr.readAsBinaryString(file);
+	}, false);
+
+	</script>
+</body>
+</html>

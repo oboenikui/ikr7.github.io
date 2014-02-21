@@ -4,10 +4,33 @@
 <meta charset='UTF-8'>
 </head>
 <body>
-	<p>ガラクタ集</p>
-	<ul>
-		<li>/balls.html</li>
-		<li>/scp1000.html</li>
-	</ul>
+	<p>ごみばこ</p>
+	<ul></ul>
+	<script>
+
+var links = [
+	'./balls.html', 
+	'./line.html', 
+	'./utils.html', 
+	'./scp1000.html', 
+];
+
+var ul = document.querySelector('ul');
+
+links.forEach(function(link){
+	
+	var li = document.createElement('li');
+	
+	var a = document.createElement('a');
+	a.href = link;
+	a.textContent = link;
+
+	li.appendChild(a);
+
+	ul.appendChild(li);
+
+});
+
+	</script>
 </body>
 </html>
